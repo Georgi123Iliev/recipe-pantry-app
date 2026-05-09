@@ -12,8 +12,20 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                'bg-beige': '#F7ECD0',
+                'paper-white': '#FFFDF8',
+                'text-dark': '#4E342E',
+                'text-muted': '#8D6E63',
+                'cherry-red': '#C24641',
+                'butter-yellow': '#FFFD74',
+                'tape-color': 'rgba(255, 255, 230, 0.7)',
+            },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                caveat: ['Caveat', 'cursive'],
+                lora: ['Lora', 'serif'],
+                montserrat: ['Montserrat', 'sans-serif'],
+                sans: ['Montserrat', ...defaultTheme.fontFamily.sans],
             },
         },
     },
