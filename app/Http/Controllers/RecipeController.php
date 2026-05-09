@@ -22,12 +22,19 @@ class RecipeController extends Controller
 
     public function index()
     {
-        $recipes = Recipe::with(['ingredients', 'images', 'user'])
-            ->latest()
-            ->paginate(12);
+        $query = Recipe::with(['ingredients', 'images', 'user']);
+
+        if (request()->filled('search')) {
+            $searchTerm = '%' . request()->search . '%';
+            $query->where('title', 'like', $searchTerm)
+                ->orWhereHas('ingredients', fn ($q) => $q->where('name', 'like', $searchTerm));
+        }
+
+        $recipes = $query->latest()->paginate(12)->withQueryString();
 
         return Inertia::render('Recipes/Index', [
             'recipes' => RecipeResource::collection($recipes),
+            'filters' => request()->only('search'),
         ]);
     }
 

@@ -2,11 +2,22 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import RecipePolaroid from '@/Components/RecipePolaroid.vue';
 import RecipeRow from '@/Components/RecipeRow.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const props = defineProps({
     recipes: Object,
+    filters: Object,
 });
+
+const search = ref(props.filters?.search || '');
+
+const performSearch = () => {
+    router.get(route('recipes.index'), { search: search.value }, {
+        preserveState: true,
+        replace: true,
+    });
+};
 </script>
 
 <template>
@@ -17,6 +28,17 @@ const props = defineProps({
             <h1 class="font-lora text-text-dark bg-paper-white inline-block mt-0" style="font-size: 2.2rem; line-height: 1.2;">
                 Каталог с рецепти
             </h1>
+
+            <!-- Search Bar -->
+            <div class="mt-4 mb-6">
+                <input
+                    v-model="search"
+                    type="text"
+                    class="search-input"
+                    placeholder="Търси рецепта или съставка..."
+                    @keyup.enter="performSearch"
+                />
+            </div>
 
             <!-- Empty State -->
             <div
