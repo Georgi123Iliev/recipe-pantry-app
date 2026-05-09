@@ -5,7 +5,9 @@ namespace Database\Seeders;
 use App\Models\Ingredient;
 use App\Models\IngredientCategory;
 use App\Models\PantryItem;
+use App\Models\Recipe;
 use App\Models\User;
+use App\Services\UnitConverter;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -57,16 +59,16 @@ class DatabaseSeeder extends Seeder
 
         // --- Pantry Items for test user (Мария) ---
         $pantryData = [
-            ['ingredient_id' => $flour->id,    'quantity' => 1500],  // 1.5 kg
-            ['ingredient_id' => $eggs->id,     'quantity' => 10],    // 10 бр.
-            ['ingredient_id' => $milk->id,     'quantity' => 1000],  // 1 l
-            ['ingredient_id' => $cheese->id,   'quantity' => 400],   // 400 g
-            ['ingredient_id' => $butter->id,   'quantity' => 200],   // 200 g
-            ['ingredient_id' => $onion->id,    'quantity' => 500],   // 500 g
-            ['ingredient_id' => $potato->id,   'quantity' => 2000],  // 2 kg
-            ['ingredient_id' => $rice->id,     'quantity' => 800],   // 800 g
-            ['ingredient_id' => $oil->id,      'quantity' => 750],   // 750 ml
-            ['ingredient_id' => $salt->id,     'quantity' => 500],   // 500 g
+            ['ingredient_id' => $flour->id,    'quantity' => 1500],
+            ['ingredient_id' => $eggs->id,     'quantity' => 10],
+            ['ingredient_id' => $milk->id,     'quantity' => 1000],
+            ['ingredient_id' => $cheese->id,   'quantity' => 400],
+            ['ingredient_id' => $butter->id,   'quantity' => 200],
+            ['ingredient_id' => $onion->id,    'quantity' => 500],
+            ['ingredient_id' => $potato->id,   'quantity' => 2000],
+            ['ingredient_id' => $rice->id,     'quantity' => 800],
+            ['ingredient_id' => $oil->id,      'quantity' => 750],
+            ['ingredient_id' => $salt->id,     'quantity' => 500],
         ];
 
         foreach ($pantryData as $item) {
@@ -76,5 +78,63 @@ class DatabaseSeeder extends Seeder
                 'quantity' => $item['quantity'],
             ]);
         }
+
+        // --- Recipes ---
+        $musaka = Recipe::create([
+            'user_id'      => $user->id,
+            'title'        => 'Домашна мусака',
+            'description'  => 'Класическа българска мусака с кайма и картофи, запечена с кисело мляко и яйца.',
+            'instructions' => "1. Нарежете картофите на кубчета и ги запържете леко.\n2. Запържете каймата с нарязания лук и подправките.\n3. Наредете в тава слой картофи, слой кайма.\n4. Разбийте яйцата с киселото мляко и излейте отгоре.\n5. Печете на 180 градуса около 40 минути.",
+            'prep_time'    => 30,
+            'cook_time'    => 40,
+            'servings'     => 6,
+        ]);
+
+        $musaka->ingredients()->attach([
+            $mince->id  => ['display_quantity' => 0.5, 'display_unit' => 'kg', 'normalized_quantity' => UnitConverter::toBaseUnit(0.5, 'kg')],
+            $potato->id => ['display_quantity' => 1,   'display_unit' => 'kg', 'normalized_quantity' => UnitConverter::toBaseUnit(1, 'kg')],
+            $onion->id  => ['display_quantity' => 150, 'display_unit' => 'g',  'normalized_quantity' => UnitConverter::toBaseUnit(150, 'g')],
+            $eggs->id   => ['display_quantity' => 3,   'display_unit' => 'бр.', 'normalized_quantity' => UnitConverter::toBaseUnit(3, 'бр.')],
+            $yogurt->id => ['display_quantity' => 400, 'display_unit' => 'g',  'normalized_quantity' => UnitConverter::toBaseUnit(400, 'g')],
+            $oil->id    => ['display_quantity' => 100, 'display_unit' => 'ml', 'normalized_quantity' => UnitConverter::toBaseUnit(100, 'ml')],
+            $salt->id   => ['display_quantity' => 1,   'display_unit' => 'чаена лъжица', 'normalized_quantity' => UnitConverter::toBaseUnit(1, 'чаена лъжица')],
+        ]);
+
+        $banica = Recipe::create([
+            'user_id'      => $user->id,
+            'title'        => 'Баница със сирене',
+            'description'  => 'Традиционна баница с хрупкави кори, пълнени със сирене и яйца.',
+            'instructions' => "1. Разбъркайте сиренето с яйцата и киселото мляко.\n2. Намажете всяка кора с олио и слой от плънката.\n3. Навийте на рулца и наредете в тава.\n4. Печете на 200 градуса около 30 минути до златисто.",
+            'prep_time'    => 20,
+            'cook_time'    => 30,
+            'servings'     => 8,
+        ]);
+
+        $banica->ingredients()->attach([
+            $cheese->id => ['display_quantity' => 400, 'display_unit' => 'g',  'normalized_quantity' => UnitConverter::toBaseUnit(400, 'g')],
+            $eggs->id   => ['display_quantity' => 4,   'display_unit' => 'бр.', 'normalized_quantity' => UnitConverter::toBaseUnit(4, 'бр.')],
+            $yogurt->id => ['display_quantity' => 200, 'display_unit' => 'g',  'normalized_quantity' => UnitConverter::toBaseUnit(200, 'g')],
+            $butter->id => ['display_quantity' => 100, 'display_unit' => 'g',  'normalized_quantity' => UnitConverter::toBaseUnit(100, 'g')],
+            $oil->id    => ['display_quantity' => 50,  'display_unit' => 'ml', 'normalized_quantity' => UnitConverter::toBaseUnit(50, 'ml')],
+        ]);
+
+        $pileshko = Recipe::create([
+            'user_id'      => $admin->id,
+            'title'        => 'Пилешко с ориз',
+            'description'  => 'Лесно и бързо пилешко с ориз на фурна.',
+            'instructions' => "1. Нарежете пилешкото месо на хапки.\n2. Запържете с лука и доматите.\n3. Добавете ориза и водата.\n4. Печете на 180 градуса около 45 минути.",
+            'prep_time'    => 15,
+            'cook_time'    => 45,
+            'servings'     => 4,
+        ]);
+
+        $pileshko->ingredients()->attach([
+            $chicken->id => ['display_quantity' => 0.5,  'display_unit' => 'kg', 'normalized_quantity' => UnitConverter::toBaseUnit(0.5, 'kg')],
+            $rice->id    => ['display_quantity' => 200,  'display_unit' => 'g',  'normalized_quantity' => UnitConverter::toBaseUnit(200, 'g')],
+            $onion->id   => ['display_quantity' => 100,  'display_unit' => 'g',  'normalized_quantity' => UnitConverter::toBaseUnit(100, 'g')],
+            $tomato->id  => ['display_quantity' => 200,  'display_unit' => 'g',  'normalized_quantity' => UnitConverter::toBaseUnit(200, 'g')],
+            $oil->id     => ['display_quantity' => 3,    'display_unit' => 'супена лъжица', 'normalized_quantity' => UnitConverter::toBaseUnit(3, 'супена лъжица')],
+            $salt->id    => ['display_quantity' => 1,    'display_unit' => 'чаена лъжица', 'normalized_quantity' => UnitConverter::toBaseUnit(1, 'чаена лъжица')],
+        ]);
     }
 }
