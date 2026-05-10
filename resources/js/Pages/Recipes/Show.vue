@@ -8,30 +8,31 @@ const props = defineProps({
 });
 
 const page = usePage();
+const r = computed(() => props.recipe.data);
 
 const canModify = computed(() => {
-    return props.recipe.user_id === page.props.auth.user.id || page.props.auth.user.is_admin;
+    return r.value.user_id === page.props.auth.user.id || page.props.auth.user.is_admin;
 });
 
 const deleteRecipe = () => {
     if (confirm('Сигурни ли сте, че искате да изтриете тази рецепта?')) {
-        router.delete(route('recipes.destroy', props.recipe.id));
+        router.delete(route('recipes.destroy', r.value.id));
     }
 };
 </script>
 
 <template>
-    <Head :title="recipe.title" />
+    <Head :title="r.title" />
 
     <AuthenticatedLayout>
         <div class="notebook-page">
             <!-- Header -->
             <div class="flex items-start justify-between flex-wrap gap-4">
                 <h1 class="font-lora text-text-dark bg-paper-white inline-block mt-0" style="font-size: 2.2rem; line-height: 1.2;">
-                    {{ recipe.title }}
+                    {{ r.title }}
                 </h1>
                 <div v-if="canModify" class="flex gap-2 mt-1">
-                    <Link :href="route('recipes.edit', recipe.id)" class="btn-add" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">
+                    <Link :href="route('recipes.edit', r.id)" class="btn-add" style="font-size: 0.8rem; padding: 0.4rem 0.8rem;">
                         Редактирай
                     </Link>
                     <button
@@ -46,24 +47,24 @@ const deleteRecipe = () => {
 
             <!-- Meta info -->
             <div class="font-caveat text-text-muted mt-2" style="font-size: 1.3rem;">
-                <span v-if="recipe.prep_time">Подготовка: {{ recipe.prep_time }} мин</span>
-                <span v-if="recipe.prep_time && recipe.cook_time"> · </span>
-                <span v-if="recipe.cook_time">Готвене: {{ recipe.cook_time }} мин</span>
-                <span v-if="recipe.servings"> · {{ recipe.servings }} порции</span>
+                <span v-if="r.prep_time">Подготовка: {{ r.prep_time }} мин</span>
+                <span v-if="r.prep_time && r.cook_time"> · </span>
+                <span v-if="r.cook_time">Готвене: {{ r.cook_time }} мин</span>
+                <span v-if="r.servings"> · {{ r.servings }} порции</span>
             </div>
             <p class="text-sm text-text-muted font-montserrat mt-1">
-                от {{ recipe.user?.name }}
+                от {{ r.user?.name }}
             </p>
 
             <!-- Description -->
-            <p v-if="recipe.description" class="mt-4 font-lora" style="font-size: 1.1rem; text-align: justify;">
-                {{ recipe.description }}
+            <p v-if="r.description" class="mt-4 font-lora" style="font-size: 1.1rem; text-align: justify;">
+                {{ r.description }}
             </p>
 
             <!-- Images -->
-            <div v-if="recipe.images && recipe.images.length > 0" class="mt-6">
+            <div v-if="r.images && r.images.length > 0" class="mt-6">
                 <div
-                    v-for="image in recipe.images"
+                    v-for="image in r.images"
                     :key="image.id"
                     class="polaroid"
                     style="width: 80%; margin: 2rem auto;"
@@ -71,7 +72,7 @@ const deleteRecipe = () => {
                     <div class="tape"></div>
                     <img
                         :src="image.url"
-                        :alt="recipe.title"
+                        :alt="r.title"
                         loading="lazy"
                         style="width: 100%; display: block;"
                     />
@@ -83,7 +84,7 @@ const deleteRecipe = () => {
                 Съставки:
             </h2>
             <ul class="ingredient-list">
-                <li v-for="ingredient in recipe.ingredients" :key="ingredient.id" class="font-lora">
+                <li v-for="ingredient in r.ingredients" :key="ingredient.id" class="font-lora">
                     <span class="font-semibold">{{ ingredient.name }}</span>
                     — {{ ingredient.display_quantity }} {{ ingredient.display_unit }}
                 </li>
@@ -94,7 +95,7 @@ const deleteRecipe = () => {
                 Начин на приготвяне:
             </h2>
             <div class="font-lora mt-2 instructions-text" style="white-space: pre-line; text-align: justify;">
-                {{ recipe.instructions }}
+                {{ r.instructions }}
             </div>
 
             <!-- Back link -->

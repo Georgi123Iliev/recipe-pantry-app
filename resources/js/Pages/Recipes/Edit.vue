@@ -5,35 +5,37 @@ import { Head, useForm } from '@inertiajs/vue3';
 
 const props = defineProps({
     recipe: Object,
-    ingredients: Array,
+    ingredients: Object,
 });
+
+const r = props.recipe.data;
 
 const form = useForm({
     _method: 'PUT',
-    title: props.recipe.title,
-    description: props.recipe.description || '',
-    instructions: props.recipe.instructions,
-    prep_time: props.recipe.prep_time,
-    cook_time: props.recipe.cook_time,
-    servings: props.recipe.servings,
-    ingredients: props.recipe.ingredients.map(ing => ({
+    title: r.title,
+    description: r.description || '',
+    instructions: r.instructions,
+    prep_time: r.prep_time,
+    cook_time: r.cook_time,
+    servings: r.servings,
+    ingredients: r.ingredients.map(ing => ({
         ingredient_id: ing.id,
         display_quantity: ing.display_quantity,
         display_unit: ing.display_unit,
     })),
-    keep_images: props.recipe.images?.map(img => img.id) || [],
+    keep_images: r.images?.map(img => img.id) || [],
     images: [],
 });
 
 const submit = () => {
-    form.post(route('recipes.update', props.recipe.id), {
+    form.post(route('recipes.update', r.id), {
         forceFormData: true,
     });
 };
 </script>
 
 <template>
-    <Head :title="`Редакция: ${recipe.title}`" />
+    <Head :title="`Редакция: ${recipe.data.title}`" />
 
     <AuthenticatedLayout>
         <div class="notebook-page">
@@ -43,8 +45,8 @@ const submit = () => {
 
             <RecipeForm
                 :form="form"
-                :ingredients="ingredients"
-                :existing-images="recipe.images"
+                :ingredients="ingredients.data"
+                :existing-images="recipe.data.images"
                 :is-editing="true"
                 submit-label="Обнови рецептата"
                 @submit="submit"

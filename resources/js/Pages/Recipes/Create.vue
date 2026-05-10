@@ -36,7 +36,7 @@ const submit = () => {
 
             <RecipeForm
                 :form="form"
-                :ingredients="ingredients"
+                :ingredients="ingredients.data"
                 submit-label="Създай рецепта"
                 @submit="submit"
             />
