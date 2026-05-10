@@ -83,7 +83,7 @@ const prevImage = () => {
                         :src="r.images[currentImageIndex].url"
                         :alt="r.title"
                         loading="lazy"
-                        style="width: 100%; display: block; aspect-ratio: 4/3; object-fit: cover;"
+                        style="width: 100%; display: block; aspect-ratio: 4/3; object-fit: contain; background-color: #f9f9f9;"
                     />
                     
                     <div v-if="r.images.length > 1" class="flex justify-between items-center mt-6 px-2">

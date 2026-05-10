@@ -295,7 +295,8 @@ const isPerfectMatch = (recipe) => recipe.matched_count === recipe.total_ingredi
 .suggestion-img {
     width: 100%;
     aspect-ratio: 4/3;
-    object-fit: cover;
+    object-fit: contain;
+    background-color: #f9f9f9;
     display: block;
 }
 

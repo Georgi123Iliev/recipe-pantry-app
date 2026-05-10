@@ -20,7 +20,7 @@ const totalTime = (props.recipe.prep_time || 0) + (props.recipe.cook_time || 0);
                     :src="recipe.images[0].url"
                     :alt="recipe.title"
                     loading="lazy"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-contain bg-[#f9f9f9]"
                 />
             </div>
             <div class="polaroid-caption">
