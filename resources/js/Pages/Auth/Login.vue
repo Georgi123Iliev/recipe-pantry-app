@@ -8,9 +8,6 @@ import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
 defineProps({
-    canResetPassword: {
-        type: Boolean,
-    },
     status: {
         type: String,
     },
@@ -82,19 +79,11 @@ const submit = () => {
                 </label>
             </div>
 
-            <div class="mt-8 flex items-center justify-between">
-                <Link
-                    v-if="canResetPassword"
-                    :href="route('password.request')"
-                    class="text-sm text-text-muted hover:text-text-dark font-lora italic no-underline border-b border-transparent hover:border-text-muted transition-all"
-                >
-                    Забравена парола?
-                </Link>
-
+            <div class="mt-8 flex justify-center">
                 <button
                     type="submit"
-                    class="btn-add"
-                    style="background-color: #C24641; box-shadow: 2px 2px 0px #4E342E;"
+                    class="inline-block px-6 py-2 border-2 font-montserrat font-semibold text-sm uppercase tracking-wider text-white transition duration-200 hover:opacity-90 w-full sm:w-auto"
+                    style="background-color: #C24641; border-color: #C24641; box-shadow: 2px 2px 0px #4E342E;"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
