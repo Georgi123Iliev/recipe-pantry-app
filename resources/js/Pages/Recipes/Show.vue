@@ -1,7 +1,7 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     recipe: Object,
@@ -17,6 +17,20 @@ const canModify = computed(() => {
 const deleteRecipe = () => {
     if (confirm('Сигурни ли сте, че искате да изтриете тази рецепта?')) {
         router.delete(route('recipes.destroy', r.value.id));
+    }
+};
+
+const currentImageIndex = ref(0);
+
+const nextImage = () => {
+    if (r.value.images && r.value.images.length > 0) {
+        currentImageIndex.value = (currentImageIndex.value + 1) % r.value.images.length;
+    }
+};
+
+const prevImage = () => {
+    if (r.value.images && r.value.images.length > 0) {
+        currentImageIndex.value = (currentImageIndex.value - 1 + r.value.images.length) % r.value.images.length;
     }
 };
 </script>
@@ -63,19 +77,26 @@ const deleteRecipe = () => {
 
             <!-- Images -->
             <div v-if="r.images && r.images.length > 0" class="mt-6">
-                <div
-                    v-for="image in r.images"
-                    :key="image.id"
-                    class="polaroid"
-                    style="width: 80%; margin: 2rem auto;"
-                >
+                <div class="polaroid" style="width: 80%; margin: 2rem auto;">
                     <div class="tape"></div>
                     <img
-                        :src="image.url"
+                        :src="r.images[currentImageIndex].url"
                         :alt="r.title"
                         loading="lazy"
-                        style="width: 100%; display: block;"
+                        style="width: 100%; display: block; aspect-ratio: 4/3; object-fit: cover;"
                     />
+                    
+                    <div v-if="r.images.length > 1" class="flex justify-between items-center mt-6 px-2">
+                        <button @click="prevImage" class="btn-add" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">
+                            &larr; Предишна
+                        </button>
+                        <span class="font-caveat text-xl text-text-dark font-bold">
+                            {{ currentImageIndex + 1 }} / {{ r.images.length }}
+                        </span>
+                        <button @click="nextImage" class="btn-add" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">
+                            Следваща &rarr;
+                        </button>
+                    </div>
                 </div>
             </div>
 
