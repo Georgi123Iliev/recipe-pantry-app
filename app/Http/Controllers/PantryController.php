@@ -30,19 +30,16 @@ class PantryController extends Controller
             'ingredients' => IngredientResource::collection(
                 Ingredient::with('category')->orderBy('name')->get()
             ),
-            'suggestions' => [
-                'perfect' => $suggestions['perfect']->map(fn ($r) => [
-                    'id' => $r->id,
-                    'title' => $r->title,
-                    'images' => $r->images->map(fn ($img) => ['id' => $img->id, 'url' => \Storage::url($img->path)]),
+            'suggestions' => $suggestions->map(fn ($r) => [
+                'id'                    => $r->id,
+                'title'                 => $r->title,
+                'matched_count'         => $r->matched_count,
+                'total_ingredient_count'=> $r->total_ingredient_count,
+                'images'                => $r->images->map(fn ($img) => [
+                    'id'  => $img->id,
+                    'url' => \Storage::url($img->path),
                 ]),
-                'partial' => $suggestions['partial']->map(fn ($r) => [
-                    'id' => $r->id,
-                    'title' => $r->title,
-                    'missing_ingredients_count' => $r->missing_ingredients_count,
-                    'images' => $r->images->map(fn ($img) => ['id' => $img->id, 'url' => \Storage::url($img->path)]),
-                ]),
-            ],
+            ]),
         ]);
     }
 
@@ -50,39 +47,20 @@ class PantryController extends Controller
     {
         $validated = $request->validate([
             'ingredient_id' => 'required|exists:ingredients,id',
-            'quantity' => 'required|numeric|min:0.01',
         ]);
 
-        $existing = auth()->user()->pantryItems()
+        $exists = auth()->user()->pantryItems()
             ->where('ingredient_id', $validated['ingredient_id'])
-            ->first();
+            ->exists();
 
-        if ($existing) {
-            $existing->update([
-                'quantity' => $existing->quantity + $validated['quantity'],
-            ]);
-        } else {
-            auth()->user()->pantryItems()->create($validated);
+        if ($exists) {
+            return back()->withErrors(['ingredient_id' => 'Тази съставка вече е в килера.']);
         }
 
-        return redirect()->back();
-    }
-
-    public function update(Request $request, PantryItem $pantryItem)
-    {
-        if ($pantryItem->user_id !== auth()->id()) {
-            abort(403);
-        }
-
-        $validated = $request->validate([
-            'quantity' => 'required|numeric|min:0',
+        auth()->user()->pantryItems()->create([
+            'ingredient_id' => $validated['ingredient_id'],
+            'quantity'       => 0,
         ]);
-
-        if ($validated['quantity'] <= 0) {
-            $pantryItem->delete();
-        } else {
-            $pantryItem->update($validated);
-        }
 
         return redirect()->back();
     }

@@ -1,72 +1,35 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
 
 export const usePantryStore = defineStore('pantry', () => {
     const items = ref([]);
-    const debounceTimers = {};
+
+    // Computed list of ingredient IDs currently in the pantry.
+    const ingredientIds = computed(() => items.value.map(i => i.ingredient_id));
 
     function hydrate(pantryItems) {
         items.value = pantryItems.map(item => ({
-            id: item.id,
-            ingredient_id: item.ingredient_id,
-            quantity: item.quantity,
-            ingredient: item.ingredient,
+            id:              item.id,
+            ingredient_id:   item.ingredient_id,
+            ingredient_name: item.ingredient?.name ?? '',
+            category_name:   item.ingredient?.category?.name ?? 'Други',
         }));
     }
 
-    function syncItem(pantryItemId, quantity) {
-        if (debounceTimers[pantryItemId]) {
-            clearTimeout(debounceTimers[pantryItemId]);
-        }
-
-        debounceTimers[pantryItemId] = setTimeout(() => {
-            router.patch(route('pantry.update', pantryItemId), {
-                quantity,
-            }, {
-                preserveState: true,
-                preserveScroll: true,
-            });
-            delete debounceTimers[pantryItemId];
-        }, 500);
-    }
-
-    function increment(pantryItemId) {
-        const item = items.value.find(i => i.id === pantryItemId);
-        if (item) {
-            item.quantity += 1;
-            syncItem(pantryItemId, item.quantity);
-        }
-    }
-
-    function decrement(pantryItemId) {
-        const item = items.value.find(i => i.id === pantryItemId);
-        if (item && item.quantity > 0) {
-            item.quantity -= 1;
-            if (item.quantity <= 0) {
-                items.value = items.value.filter(i => i.id !== pantryItemId);
-            }
-            syncItem(pantryItemId, item.quantity);
-        }
-    }
-
-    function addItem(ingredientId, quantity) {
-        router.post(route('pantry.store'), {
-            ingredient_id: ingredientId,
-            quantity,
-        }, {
-            preserveState: true,
-            preserveScroll: true,
+    function addItem(pantryItem) {
+        // Prevent client-side duplicates (server is the authoritative guard).
+        if (ingredientIds.value.includes(pantryItem.ingredient_id)) return;
+        items.value.push({
+            id:              pantryItem.id,
+            ingredient_id:   pantryItem.ingredient_id,
+            ingredient_name: pantryItem.ingredient?.name ?? '',
+            category_name:   pantryItem.ingredient?.category?.name ?? 'Други',
         });
     }
 
     function removeItem(pantryItemId) {
         items.value = items.value.filter(i => i.id !== pantryItemId);
-        router.delete(route('pantry.destroy', pantryItemId), {
-            preserveState: true,
-            preserveScroll: true,
-        });
     }
 
-    return { items, hydrate, increment, decrement, addItem, removeItem };
+    return { items, ingredientIds, hydrate, addItem, removeItem };
 });

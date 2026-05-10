@@ -59,7 +59,6 @@ class PantryCrudTest extends TestCase
         $response = $this->actingAs($this->user)
             ->post(route('pantry.store'), [
                 'ingredient_id' => $this->flour->id,
-                'quantity' => 500,
             ]);
 
         $response->assertRedirect();
@@ -67,84 +66,27 @@ class PantryCrudTest extends TestCase
         $this->assertDatabaseHas('pantry_items', [
             'user_id' => $this->user->id,
             'ingredient_id' => $this->flour->id,
-            'quantity' => 500,
         ]);
     }
 
-    public function test_store_upserts_existing_item(): void
+    public function test_store_rejects_duplicates(): void
     {
         PantryItem::create([
             'user_id' => $this->user->id,
             'ingredient_id' => $this->flour->id,
-            'quantity' => 500,
+            'quantity' => 0,
         ]);
 
-        $this->actingAs($this->user)
+        $response = $this->actingAs($this->user)
             ->post(route('pantry.store'), [
                 'ingredient_id' => $this->flour->id,
-                'quantity' => 300,
             ]);
 
-        $this->assertDatabaseHas('pantry_items', [
-            'user_id' => $this->user->id,
-            'ingredient_id' => $this->flour->id,
-            'quantity' => 800,
-        ]);
+        $response->assertSessionHasErrors('ingredient_id');
 
         $this->assertEquals(1, PantryItem::where('user_id', $this->user->id)
             ->where('ingredient_id', $this->flour->id)
             ->count());
-    }
-
-    public function test_update_changes_quantity(): void
-    {
-        $item = PantryItem::create([
-            'user_id' => $this->user->id,
-            'ingredient_id' => $this->flour->id,
-            'quantity' => 500,
-        ]);
-
-        $this->actingAs($this->user)
-            ->patch(route('pantry.update', $item), [
-                'quantity' => 750,
-            ]);
-
-        $this->assertDatabaseHas('pantry_items', [
-            'id' => $item->id,
-            'quantity' => 750,
-        ]);
-    }
-
-    public function test_update_to_zero_deletes_item(): void
-    {
-        $item = PantryItem::create([
-            'user_id' => $this->user->id,
-            'ingredient_id' => $this->flour->id,
-            'quantity' => 500,
-        ]);
-
-        $this->actingAs($this->user)
-            ->patch(route('pantry.update', $item), [
-                'quantity' => 0,
-            ]);
-
-        $this->assertDatabaseMissing('pantry_items', ['id' => $item->id]);
-    }
-
-    public function test_update_denied_for_non_owner(): void
-    {
-        $item = PantryItem::create([
-            'user_id' => $this->user->id,
-            'ingredient_id' => $this->flour->id,
-            'quantity' => 500,
-        ]);
-
-        $response = $this->actingAs($this->otherUser)
-            ->patch(route('pantry.update', $item), [
-                'quantity' => 999,
-            ]);
-
-        $response->assertForbidden();
     }
 
     public function test_destroy_removes_item(): void
@@ -152,7 +94,7 @@ class PantryCrudTest extends TestCase
         $item = PantryItem::create([
             'user_id' => $this->user->id,
             'ingredient_id' => $this->flour->id,
-            'quantity' => 500,
+            'quantity' => 0,
         ]);
 
         $this->actingAs($this->user)
@@ -166,7 +108,7 @@ class PantryCrudTest extends TestCase
         $item = PantryItem::create([
             'user_id' => $this->user->id,
             'ingredient_id' => $this->flour->id,
-            'quantity' => 500,
+            'quantity' => 0,
         ]);
 
         $response = $this->actingAs($this->otherUser)
@@ -181,6 +123,6 @@ class PantryCrudTest extends TestCase
         $response = $this->actingAs($this->user)
             ->post(route('pantry.store'), []);
 
-        $response->assertSessionHasErrors(['ingredient_id', 'quantity']);
+        $response->assertSessionHasErrors(['ingredient_id']);
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\PantryAlgorithmController;
 use App\Http\Controllers\PantryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
@@ -30,10 +29,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pantry', [PantryController::class, 'index'])->name('pantry.index');
     Route::post('/pantry', [PantryController::class, 'store'])->name('pantry.store');
-    Route::patch('/pantry/{pantryItem}', [PantryController::class, 'update'])->name('pantry.update');
     Route::delete('/pantry/{pantryItem}', [PantryController::class, 'destroy'])->name('pantry.destroy');
-
-    Route::get('/pantry/suggestions', [PantryAlgorithmController::class, 'index'])->name('pantry.suggestions');
 });
 
 // Admin routes — endpoints filled in Phase 10

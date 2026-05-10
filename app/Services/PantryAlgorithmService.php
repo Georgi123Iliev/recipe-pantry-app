@@ -9,73 +9,29 @@ use Illuminate\Support\Collection;
 class PantryAlgorithmService
 {
     /**
-     * @return array{perfect: Collection, partial: Collection}
+     * Return all recipes that share at least one ingredient with the user's pantry,
+     * ordered by the number of matching ingredients descending.
+     * Each recipe carries matched_count and ingredients_count virtual attributes.
      */
-    public function getResults(User $user): array
+    public function getResults(User $user): Collection
     {
-        $pantry = $user->pantryItems()
-            ->pluck('quantity', 'ingredient_id');
+        $pantryIngredientIds = $user->pantryItems()->pluck('ingredient_id');
 
-        $perfectIds = $this->getPerfectMatchIds($pantry);
-        $partial = $this->getPartialMatches($pantry, $perfectIds);
+        if ($pantryIngredientIds->isEmpty()) {
+            return collect();
+        }
 
-        $perfect = Recipe::with(['ingredients', 'images', 'user'])
-            ->whereIn('id', $perfectIds)
-            ->get();
-
-        return [
-            'perfect' => $perfect,
-            'partial' => $partial,
-        ];
-    }
-
-    /**
-     * Perfect match: every ingredient in the recipe exists in the pantry
-     * with sufficient quantity (normalized_quantity <= pantry quantity).
-     */
-    private function getPerfectMatchIds(Collection $pantry): array
-    {
-        return Recipe::whereDoesntHave('ingredients', function ($query) use ($pantry) {
-            $query->where(function ($q) use ($pantry) {
-                foreach ($pantry as $ingredientId => $qty) {
-                    $q->orWhere(function ($sub) use ($ingredientId, $qty) {
-                        $sub->where('ingredient_id', $ingredientId)
-                            ->where('normalized_quantity', '>', $qty);
-                    });
-                }
-
-                $q->orWhereNotIn('ingredient_id', $pantry->keys()->toArray());
-            });
-        })->pluck('id')->toArray();
-    }
-
-    /**
-     * Partial match: recipes with at most 3 missing/insufficient ingredients.
-     * Excludes perfect matches. Ordered by missing count ascending.
-     */
-    private function getPartialMatches(Collection $pantry, array $excludeIds): Collection
-    {
-        $recipes = Recipe::with(['ingredients', 'images', 'user'])
-            ->whereNotIn('id', $excludeIds)
-            ->get();
-
-        return $recipes->map(function ($recipe) use ($pantry) {
-            $missingCount = 0;
-
-            foreach ($recipe->ingredients as $ingredient) {
-                $pantryQty = $pantry->get($ingredient->id, 0);
-
-                if ($pantryQty < $ingredient->pivot->normalized_quantity) {
-                    $missingCount++;
-                }
-            }
-
-            $recipe->missing_ingredients_count = $missingCount;
-
-            return $recipe;
+        return Recipe::withCount([
+            'ingredients as matched_count' => function ($q) use ($pantryIngredientIds) {
+                $q->whereIn('ingredients.id', $pantryIngredientIds);
+            },
+            'ingredients as total_ingredient_count',
+        ])
+        ->whereHas('ingredients', function ($q) use ($pantryIngredientIds) {
+            $q->whereIn('ingredients.id', $pantryIngredientIds);
         })
-        ->filter(fn ($recipe) => $recipe->missing_ingredients_count >= 1 && $recipe->missing_ingredients_count <= 3)
-        ->sortBy('missing_ingredients_count')
-        ->values();
+        ->orderByDesc('matched_count')
+        ->with(['ingredients', 'images', 'user'])
+        ->get();
     }
 }
