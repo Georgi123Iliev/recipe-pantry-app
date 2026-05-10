@@ -7,8 +7,12 @@ use App\Models\User;
 
 class RecipePolicy
 {
-    public function before(User $user, string $ability): ?bool
+    public function before(?User $user, string $ability): ?bool
     {
+        if (!$user) {
+            return null;
+        }
+
         if ($user->is_admin) {
             return true;
         }
@@ -16,12 +20,12 @@ class RecipePolicy
         return null;
     }
 
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
         return true;
     }
 
-    public function view(User $user, Recipe $recipe): bool
+    public function view(?User $user, Recipe $recipe): bool
     {
         return true;
     }

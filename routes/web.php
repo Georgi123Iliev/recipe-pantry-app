@@ -25,12 +25,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('recipes', RecipeController::class);
+    Route::resource('recipes', RecipeController::class)->except(['index', 'show']);
 
     Route::get('/pantry', [PantryController::class, 'index'])->name('pantry.index');
     Route::post('/pantry', [PantryController::class, 'store'])->name('pantry.store');
     Route::delete('/pantry/{pantryItem}', [PantryController::class, 'destroy'])->name('pantry.destroy');
 });
+
+Route::resource('recipes', RecipeController::class)->only(['index', 'show']);
 
 // Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {

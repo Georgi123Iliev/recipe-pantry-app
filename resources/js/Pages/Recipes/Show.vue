@@ -11,6 +11,7 @@ const page = usePage();
 const r = computed(() => props.recipe.data);
 
 const canModify = computed(() => {
+    if (!page.props.auth.user) return false;
     return r.value.user_id === page.props.auth.user.id || page.props.auth.user.is_admin;
 });
 

@@ -103,6 +103,12 @@ const submit = () => {
             </div>
 
             <div class="mt-8 pt-6 border-t border-dashed border-text-muted text-center">
+                <Link 
+                    :href="route('recipes.index')" 
+                    class="inline-block mb-4 px-6 py-2 border-2 border-text-dark text-text-dark font-montserrat font-semibold text-sm uppercase tracking-wider hover:bg-text-dark hover:text-white transition duration-200"
+                >
+                    Разгледай като гост
+                </Link>
                 <p class="text-sm text-text-muted font-lora italic">
                     Нямате акаунт?
                     <Link :href="route('register')" class="text-cherry-red font-semibold hover:underline">

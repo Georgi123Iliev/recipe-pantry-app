@@ -44,7 +44,7 @@ const page = usePage();
             <!-- Right side: Add + User -->
             <div class="hidden md:flex items-center gap-4">
                 <Link
-                    v-if="$page.props.auth.user.is_admin"
+                    v-if="$page.props.auth.user && $page.props.auth.user.is_admin"
                     :href="route('admin.users.index')"
                     class="btn-add"
                     style="background-color: #8D6E63; box-shadow: 2px 2px 0px #4E342E;"
@@ -57,7 +57,7 @@ const page = usePage();
                 </Link>
 
                 <!-- User Dropdown -->
-                <div class="relative">
+                <div class="relative" v-if="$page.props.auth.user">
                     <button
                         @click="showingUserMenu = !showingUserMenu"
                         class="flex items-center gap-1 font-montserrat text-sm font-medium text-text-muted hover:text-text-dark transition-colors bg-transparent border-none cursor-pointer"
@@ -91,6 +91,15 @@ const page = usePage();
                             Изход
                         </Link>
                     </div>
+                </div>
+                <!-- Auth Navigation -->
+                <div class="flex gap-4 items-center" v-else>
+                    <Link :href="route('login')" class="font-montserrat text-sm font-semibold text-text-dark hover:text-cherry-red uppercase tracking-wide">
+                        Вход
+                    </Link>
+                    <Link :href="route('register')" class="font-montserrat text-sm font-semibold text-text-dark hover:text-cherry-red uppercase tracking-wide">
+                        Регистрация
+                    </Link>
                 </div>
             </div>
 
@@ -133,7 +142,7 @@ const page = usePage();
                     Моят Килер
                 </Link>
                 <Link
-                    v-if="$page.props.auth.user.is_admin"
+                    v-if="$page.props.auth.user && $page.props.auth.user.is_admin"
                     :href="route('admin.users.index')"
                     class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase"
                 >
@@ -146,7 +155,7 @@ const page = usePage();
                     + Нова Рецепта
                 </Link>
             </div>
-            <div class="mt-4 pt-4 border-t border-text-muted/20">
+            <div class="mt-4 pt-4 border-t border-text-muted/20" v-if="$page.props.auth.user">
                 <div class="px-3 text-sm font-medium text-text-dark font-montserrat">
                     {{ page.props.auth.user.name }}
                 </div>
@@ -169,6 +178,20 @@ const page = usePage();
                         Изход
                     </Link>
                 </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-text-muted/20" v-else>
+                <Link
+                    :href="route('login')"
+                    class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase font-montserrat"
+                >
+                    Вход
+                </Link>
+                <Link
+                    :href="route('register')"
+                    class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase font-montserrat"
+                >
+                    Регистрация
+                </Link>
             </div>
         </div>
 
