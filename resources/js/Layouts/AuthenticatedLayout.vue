@@ -28,8 +28,9 @@ const page = usePage();
                     Каталог
                 </Link>
                 <Link
-                    :href="route('dashboard')"
-                    class="no-underline text-text-dark transition-colors duration-200 hover:text-cherry-red"
+                    :href="route('pantry.index')"
+                    class="no-underline transition-colors duration-200 hover:text-cherry-red"
+                    :class="route().current('pantry.index') ? 'text-cherry-red' : 'text-text-dark'"
                 >
                     Моят Килер
                 </Link>
@@ -112,7 +113,7 @@ const page = usePage();
                     Каталог
                 </Link>
                 <Link
-                    :href="route('dashboard')"
+                    :href="route('pantry.index')"
                     class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase"
                 >
                     Моят Килер

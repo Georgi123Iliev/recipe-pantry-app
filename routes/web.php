@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PantryAlgorithmController;
+use App\Http\Controllers\PantryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
 use Illuminate\Foundation\Application;
@@ -26,6 +27,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('recipes', RecipeController::class);
+
+    Route::get('/pantry', [PantryController::class, 'index'])->name('pantry.index');
+    Route::post('/pantry', [PantryController::class, 'store'])->name('pantry.store');
+    Route::patch('/pantry/{pantryItem}', [PantryController::class, 'update'])->name('pantry.update');
+    Route::delete('/pantry/{pantryItem}', [PantryController::class, 'destroy'])->name('pantry.destroy');
 
     Route::get('/pantry/suggestions', [PantryAlgorithmController::class, 'index'])->name('pantry.suggestions');
 });
