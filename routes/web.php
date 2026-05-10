@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PantryAlgorithmController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
 use Illuminate\Foundation\Application;
@@ -25,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('recipes', RecipeController::class);
+
+    Route::get('/pantry/suggestions', [PantryAlgorithmController::class, 'index'])->name('pantry.suggestions');
 });
 
 // Admin routes — endpoints filled in Phase 10
