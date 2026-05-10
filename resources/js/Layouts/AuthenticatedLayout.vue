@@ -8,9 +8,14 @@ const page = usePage();
 </script>
 
 <template>
-    <div class="gingham-bg min-h-screen font-lora" style="padding: 2rem 5%;">
+    <div 
+        class="min-h-screen font-lora transition-colors duration-300" 
+        :class="route().current('admin.*') ? 'bg-[#EFE5D0] admin-zone' : 'gingham-bg'"
+        style="padding: 2rem 5%;"
+    >
         <!-- Top Navigation -->
-        <nav class="paper-texture flex items-center justify-between p-4 px-8 mb-8">
+        <nav class="paper-texture flex items-center justify-between p-4 px-8 mb-8 transition-shadow"
+             :class="route().current('admin.*') ? 'shadow-md border-b-4 border-cherry-red' : ''">
             <!-- Logo -->
             <Link :href="route('recipes.index')" class="block">
                 <h1 class="font-caveat text-cherry-red text-4xl m-0" style="transform: rotate(-2deg);">
@@ -38,6 +43,15 @@ const page = usePage();
 
             <!-- Right side: Add + User -->
             <div class="hidden md:flex items-center gap-4">
+                <Link
+                    v-if="$page.props.auth.user.is_admin"
+                    :href="route('admin.users.index')"
+                    class="btn-add"
+                    style="background-color: #8D6E63; box-shadow: 2px 2px 0px #4E342E;"
+                >
+                    Админ
+                </Link>
+
                 <Link :href="route('recipes.create')" class="btn-add">
                     + Нова Рецепта
                 </Link>
@@ -117,6 +131,13 @@ const page = usePage();
                     class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase"
                 >
                     Моят Килер
+                </Link>
+                <Link
+                    v-if="$page.props.auth.user.is_admin"
+                    :href="route('admin.users.index')"
+                    class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase"
+                >
+                    Админ
                 </Link>
                 <Link
                     :href="route('recipes.create')"

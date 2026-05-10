@@ -32,9 +32,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/pantry/{pantryItem}', [PantryController::class, 'destroy'])->name('pantry.destroy');
 });
 
-// Admin routes — endpoints filled in Phase 10
+// Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    //
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index', 'update', 'destroy']);
+    Route::resource('ingredients', \App\Http\Controllers\Admin\IngredientController::class)->except(['show']);
 });
 
 require __DIR__.'/auth.php';
