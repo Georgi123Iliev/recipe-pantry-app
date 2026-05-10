@@ -33,18 +33,22 @@ const submit = () => {
     <GuestLayout>
         <Head title="Вход" />
 
-        <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
-            {{ status }}
-        </div>
+        <form @submit.prevent="submit" class="relative z-10">
+            <h2 class="font-lora text-2xl mb-6 text-text-dark border-b-2 border-dashed border-text-muted pb-2">
+                Вход в тетрадката
+            </h2>
 
-        <form @submit.prevent="submit">
+            <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
+                {{ status }}
+            </div>
+
             <div>
-                <InputLabel for="email" value="Имейл" />
+                <InputLabel for="email" value="Имейл" class="font-montserrat uppercase text-xs tracking-widest text-text-muted" />
 
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full border-text-muted focus:border-cherry-red focus:ring-cherry-red"
                     v-model="form.email"
                     required
                     autofocus
@@ -55,12 +59,12 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Парола" />
+                <InputLabel for="password" value="Парола" class="font-montserrat uppercase text-xs tracking-widest text-text-muted" />
 
                 <TextInput
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-1 block w-full border-text-muted focus:border-cherry-red focus:ring-cherry-red"
                     v-model="form.password"
                     required
                     autocomplete="current-password"
@@ -71,29 +75,40 @@ const submit = () => {
 
             <div class="mt-4 block">
                 <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600"
+                    <Checkbox name="remember" v-model:checked="form.remember" class="text-cherry-red focus:ring-cherry-red" />
+                    <span class="ms-2 text-sm text-text-muted font-lora italic"
                         >Запомни ме</span
                     >
                 </label>
             </div>
 
-            <div class="mt-4 flex items-center justify-end">
+            <div class="mt-8 flex items-center justify-between">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    class="text-sm text-text-muted hover:text-text-dark font-lora italic no-underline border-b border-transparent hover:border-text-muted transition-all"
                 >
                     Забравена парола?
                 </Link>
 
-                <PrimaryButton
-                    class="ms-4"
+                <button
+                    type="submit"
+                    class="btn-add"
+                    style="background-color: #C24641; box-shadow: 2px 2px 0px #4E342E;"
                     :class="{ 'opacity-25': form.processing }"
                     :disabled="form.processing"
                 >
-                    Вход
-                </PrimaryButton>
+                    Влез
+                </button>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-dashed border-text-muted text-center">
+                <p class="text-sm text-text-muted font-lora italic">
+                    Нямате акаунт?
+                    <Link :href="route('register')" class="text-cherry-red font-semibold hover:underline">
+                        Регистрирайте се тук
+                    </Link>
+                </p>
             </div>
         </form>
     </GuestLayout>

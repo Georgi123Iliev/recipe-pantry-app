@@ -27,8 +27,5 @@ class Ingredient extends Model
         return $this->hasMany(PantryItem::class);
     }
 
-    public function shoppingListItems(): HasMany
-    {
-        return $this->hasMany(ShoppingListItem::class);
-    }
+
 }

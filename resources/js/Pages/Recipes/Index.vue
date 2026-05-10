@@ -99,7 +99,7 @@ const performSearch = () => {
 <style scoped>
 .recipe-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 2.5rem;
     margin-top: 2rem;
 }

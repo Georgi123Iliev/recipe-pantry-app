@@ -172,55 +172,15 @@ const page = usePage();
             </div>
         </div>
 
-        <!-- Journal Container: main + sidebar grid -->
-        <div class="max-w-[1100px] mx-auto grid gap-12 items-start" style="grid-template-columns: 2fr 1fr;">
-            <!-- Left Column: Page Content -->
+        <!-- Main Container -->
+        <div class="max-w-[1100px] mx-auto">
             <main>
                 <slot />
             </main>
-
-            <!-- Right Sidebar -->
-            <aside class="flex flex-col gap-8 sidebar-column">
-                <!-- Recipe Box / Pantry Search -->
-                <div class="recipe-box">
-                    <h3>Какво имаш в хладилника?</h3>
-                    <p class="text-sm italic text-text-muted mb-3">
-                        Въведи продуктите, а аз ще ти кажа какво да сготвим.
-                    </p>
-                    <input
-                        type="text"
-                        class="search-input"
-                        placeholder="напр. яйца, брашно, сирене..."
-                    />
-                    <button class="btn-add w-full text-center" style="background-color: #C24641; color: white;">
-                        Търси рецепта
-                    </button>
-                </div>
-
-                <!-- Sticky Note Shopping List -->
-                <div class="sticky-note">
-                    <div class="pin"></div>
-                    <h3 class="font-caveat text-2xl m-0 mb-2 text-text-dark text-center">
-                        За пазаруване:
-                    </h3>
-                    <ul>
-                        <li class="text-text-muted italic" style="font-size: 1.3rem;">
-                            Списъкът е празен
-                        </li>
-                    </ul>
-                </div>
-            </aside>
         </div>
     </div>
 </template>
 
 <style scoped>
-@media (max-width: 900px) {
-    .sidebar-column {
-        display: none;
-    }
-    div[style*="grid-template-columns"] {
-        grid-template-columns: 1fr !important;
-    }
-}
+
 </style>

@@ -30,7 +30,7 @@ class RecipeController extends Controller
                 ->orWhereHas('ingredients', fn ($q) => $q->where('name', 'like', $searchTerm));
         }
 
-        $recipes = $query->latest()->paginate(12)->withQueryString();
+        $recipes = $query->latest()->paginate(8)->withQueryString();
 
         return Inertia::render('Recipes/Index', [
             'recipes' => RecipeResource::collection($recipes),
