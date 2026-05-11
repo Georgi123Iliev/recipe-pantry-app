@@ -48,7 +48,7 @@ const performSearch = () => {
                 <p class="font-caveat text-text-muted" style="font-size: 2rem;">
                     Тетрадката е празна. Добави първата рецепта!
                 </p>
-                <Link :href="route('recipes.create')" class="btn-add mt-4 inline-block">
+                <Link v-if="$page.props.auth.user" :href="route('recipes.create')" class="btn-add mt-4 inline-block">
                     + Нова Рецепта
                 </Link>
             </div>

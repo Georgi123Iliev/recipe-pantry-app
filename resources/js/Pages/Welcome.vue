@@ -8,7 +8,10 @@ defineProps({
     canRegister: {
         type: Boolean,
     },
+    latestRecipes: Object,
 });
+
+const totalTime = (recipe) => (recipe.prep_time || 0) + (recipe.cook_time || 0);
 </script>
 
 <template>
@@ -102,20 +105,27 @@ defineProps({
                     <h3 class="font-montserrat uppercase text-sm font-bold border-b-2 border-dashed border-text-muted pb-2 mb-4">
                         Разлисти тетрадката
                     </h3>
-                    <div class="flex flex-col gap-4">
-                        <div class="recipe-row">
-                            <span class="font-caveat text-cherry-red text-xl">45 мин</span>
-                            <span class="font-semibold">Домашна мусака</span>
-                        </div>
-                        <div class="recipe-row">
-                            <span class="font-caveat text-cherry-red text-xl">120 мин</span>
-                            <span class="font-semibold">Празнична погача</span>
-                        </div>
-                        <div class="recipe-row">
-                            <span class="font-caveat text-cherry-red text-xl">20 мин</span>
-                            <span class="font-semibold">Мекиците на дядо</span>
-                        </div>
+                    <div class="flex flex-col gap-4" v-if="latestRecipes?.data?.length">
+                        <Link
+                            v-for="recipe in latestRecipes.data"
+                            :key="recipe.id"
+                            :href="route('recipes.show', recipe.id)"
+                            class="recipe-row"
+                        >
+                            <span v-if="totalTime(recipe)" class="font-caveat text-cherry-red text-xl">{{ totalTime(recipe) }} мин</span>
+                            <span v-else class="font-caveat text-text-muted text-xl">—</span>
+                            <span class="font-semibold">{{ recipe.title }}</span>
+                        </Link>
                     </div>
+                    <p v-else class="font-caveat text-text-muted text-lg text-center py-4">
+                        Все още няма рецепти.
+                    </p>
+                    <Link
+                        :href="route('recipes.index')"
+                        class="block mt-4 text-center font-montserrat text-sm text-text-muted hover:text-cherry-red no-underline transition-colors"
+                    >
+                        Разгледай всички →
+                    </Link>
                 </div>
 
                 <div class="sticky-note rotate-1">
@@ -132,6 +142,10 @@ defineProps({
 
 <style scoped>
 .recipe-row {
-    @apply flex items-center gap-4 py-2 border-b border-[#e1daca] hover:bg-bg-beige/30 cursor-default;
+    @apply flex items-center gap-4 py-2 border-b border-[#e1daca] hover:bg-bg-beige/30 cursor-pointer no-underline text-text-dark transition-colors duration-200;
+}
+
+.recipe-row:hover span.font-semibold {
+    color: #C24641;
 }
 </style>

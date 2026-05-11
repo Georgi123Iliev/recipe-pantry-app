@@ -33,6 +33,7 @@ const page = usePage();
                     Каталог
                 </Link>
                 <Link
+                    v-if="$page.props.auth.user"
                     :href="route('pantry.index')"
                     class="no-underline transition-colors duration-200 hover:text-cherry-red"
                     :class="route().current('pantry.index') ? 'text-cherry-red' : 'text-text-dark'"
@@ -52,7 +53,7 @@ const page = usePage();
                     Админ
                 </Link>
 
-                <Link :href="route('recipes.create')" class="btn-add">
+                <Link v-if="$page.props.auth.user" :href="route('recipes.create')" class="btn-add">
                     + Нова Рецепта
                 </Link>
 
@@ -136,6 +137,7 @@ const page = usePage();
                     Каталог
                 </Link>
                 <Link
+                    v-if="$page.props.auth.user"
                     :href="route('pantry.index')"
                     class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase"
                 >
@@ -149,6 +151,7 @@ const page = usePage();
                     Админ
                 </Link>
                 <Link
+                    v-if="$page.props.auth.user"
                     :href="route('recipes.create')"
                     class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase"
                 >

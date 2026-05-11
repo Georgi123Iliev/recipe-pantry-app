@@ -3,16 +3,24 @@
 use App\Http\Controllers\PantryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Resources\RecipeResource;
+use App\Models\Recipe;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+    $latestRecipes = Recipe::with(['ingredients', 'images', 'user'])
+        ->latest()
+        ->take(5)
+        ->get();
+
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        'latestRecipes' => RecipeResource::collection($latestRecipes),
     ]);
 });
 
