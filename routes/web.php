@@ -46,6 +46,12 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('recipes', RecipeController::class)->only(['index', 'show']);
 
+Route::get('/guest-prompt', function () {
+    return Inertia::render('GuestPrompt', [
+        'feature' => request()->query('feature', ''),
+    ]);
+})->name('guest.prompt');
+
 // Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->only(['index', 'update', 'destroy']);

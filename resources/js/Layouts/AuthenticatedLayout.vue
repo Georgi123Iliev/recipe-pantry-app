@@ -33,8 +33,7 @@ const page = usePage();
                     Каталог
                 </Link>
                 <Link
-                    v-if="$page.props.auth.user"
-                    :href="route('pantry.index')"
+                    :href="$page.props.auth.user ? route('pantry.index') : route('guest.prompt', { feature: 'pantry' })"
                     class="no-underline transition-colors duration-200 hover:text-cherry-red"
                     :class="route().current('pantry.index') ? 'text-cherry-red' : 'text-text-dark'"
                 >
@@ -53,7 +52,10 @@ const page = usePage();
                     Админ
                 </Link>
 
-                <Link v-if="$page.props.auth.user" :href="route('recipes.create')" class="btn-add">
+                <Link
+                    :href="$page.props.auth.user ? route('recipes.create') : route('guest.prompt', { feature: 'recipe' })"
+                    class="btn-add"
+                >
                     + Нова Рецепта
                 </Link>
 
@@ -137,8 +139,7 @@ const page = usePage();
                     Каталог
                 </Link>
                 <Link
-                    v-if="$page.props.auth.user"
-                    :href="route('pantry.index')"
+                    :href="$page.props.auth.user ? route('pantry.index') : route('guest.prompt', { feature: 'pantry' })"
                     class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase"
                 >
                     Моят Килер
@@ -151,8 +152,7 @@ const page = usePage();
                     Админ
                 </Link>
                 <Link
-                    v-if="$page.props.auth.user"
-                    :href="route('recipes.create')"
+                    :href="$page.props.auth.user ? route('recipes.create') : route('guest.prompt', { feature: 'recipe' })"
                     class="block py-2 px-3 rounded text-text-dark no-underline hover:bg-bg-beige font-semibold text-sm uppercase"
                 >
                     + Нова Рецепта
