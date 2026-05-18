@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('recipe_id')->constrained()->cascadeOnDelete();
-            $table->unsignedTinyInteger('value');
+            $table->decimal('value', 2, 1);
             $table->text('review')->nullable();
             $table->timestamps();
 

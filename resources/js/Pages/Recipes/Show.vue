@@ -162,7 +162,7 @@ const formatDate = (dateString) => {
 
                     <!-- Average summary -->
                     <div class="flex items-center gap-3 mt-2">
-                        <StarRating :modelValue="Math.round(r.ratings_avg)" readonly />
+                        <StarRating :modelValue="parseFloat(r.ratings_avg) || 0" readonly />
                         <span class="font-caveat text-text-dark" style="font-size: 1.4rem;">
                             {{ r.ratings_avg }} / 5
                         </span>
@@ -200,9 +200,7 @@ const formatDate = (dateString) => {
                                 <span class="font-montserrat font-semibold text-sm text-text-dark">
                                     {{ rating.user.name }}
                                 </span>
-                                <span class="font-caveat" style="font-size: 1.3rem; color: #DAA520;">
-                                    {{ '★'.repeat(rating.value) }}{{ '☆'.repeat(5 - rating.value) }}
-                                </span>
+                                <StarRating :modelValue="parseFloat(rating.value)" readonly />
                                 <span class="font-montserrat text-text-muted text-xs ml-auto">
                                     {{ formatDate(rating.created_at) }}
                                 </span>

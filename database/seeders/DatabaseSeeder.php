@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Ingredient;
 use App\Models\IngredientCategory;
 use App\Models\PantryItem;
+use App\Models\Rating;
 use App\Models\Recipe;
 use App\Models\User;
 use App\Services\UnitConverter;
@@ -256,6 +257,126 @@ class DatabaseSeeder extends Seeder
             $eggs->id => ['display_quantity' => 6, 'display_unit' => 'бр.', 'normalized_quantity' => UnitConverter::toBaseUnit(6, 'бр.')],
             $milk->id => ['display_quantity' => 1, 'display_unit' => 'l', 'normalized_quantity' => UnitConverter::toBaseUnit(1, 'l')],
             $sugar->id => ['display_quantity' => 200, 'display_unit' => 'g', 'normalized_quantity' => UnitConverter::toBaseUnit(200, 'g')],
+        ]);
+
+        $tarator = Recipe::create([
+            'user_id' => $user->id,
+            'title' => 'Таратор',
+            'description' => 'Студена и освежаваща лятна супа.',
+            'instructions' => "1. Нарежете краставиците на дребни кубчета.\n2. Разбийте киселото мляко с вода до желаната гъстота.\n3. Смесете ги и добавете копър, счукан чесън, сол и малко олио.",
+            'prep_time' => 10,
+            'cook_time' => 0,
+            'servings' => 4,
+        ]);
+
+        $tarator->ingredients()->attach([
+            $yogurt->id => ['display_quantity' => 500, 'display_unit' => 'g', 'normalized_quantity' => UnitConverter::toBaseUnit(500, 'g')],
+            $oil->id => ['display_quantity' => 2, 'display_unit' => 'супена лъжица', 'normalized_quantity' => UnitConverter::toBaseUnit(2, 'супена лъжица')],
+            $salt->id => ['display_quantity' => 1, 'display_unit' => 'чаена лъжица', 'normalized_quantity' => UnitConverter::toBaseUnit(1, 'чаена лъжица')],
+        ]);
+
+        $shopska = Recipe::create([
+            'user_id' => $admin->id,
+            'title' => 'Шопска салата',
+            'description' => 'Традиционна българска салата.',
+            'instructions' => "1. Нарежете доматите, краставиците, чушките и лука.\n2. Овкусете със сол и олио.\n3. Настържете сирене обилно отгоре и украсете с маслина.",
+            'prep_time' => 15,
+            'cook_time' => 0,
+            'servings' => 2,
+        ]);
+
+        $shopska->ingredients()->attach([
+            $tomato->id => ['display_quantity' => 200, 'display_unit' => 'g', 'normalized_quantity' => UnitConverter::toBaseUnit(200, 'g')],
+            $pepper->id => ['display_quantity' => 2, 'display_unit' => 'бр.', 'normalized_quantity' => UnitConverter::toBaseUnit(2, 'бр.')],
+            $onion->id => ['display_quantity' => 50, 'display_unit' => 'g', 'normalized_quantity' => UnitConverter::toBaseUnit(50, 'g')],
+            $cheese->id => ['display_quantity' => 100, 'display_unit' => 'g', 'normalized_quantity' => UnitConverter::toBaseUnit(100, 'g')],
+            $oil->id => ['display_quantity' => 2, 'display_unit' => 'супена лъжица', 'normalized_quantity' => UnitConverter::toBaseUnit(2, 'супена лъжица')],
+            $salt->id => ['display_quantity' => 1, 'display_unit' => 'щипка', 'normalized_quantity' => UnitConverter::toBaseUnit(1, 'щипка')],
+        ]);
+
+        // --- Ratings/Reviews ---
+        Rating::create([
+            'user_id' => $user->id,
+            'recipe_id' => $pileshko->id,
+            'value' => 4.5,
+            'review' => 'Много вкусна и лесна рецепта! Децата я обожават.',
+        ]);
+
+        Rating::create([
+            'user_id' => $admin->id,
+            'recipe_id' => $pileshko->id,
+            'value' => 5,
+            'review' => 'Перфектно ястие за делничен обяд.',
+        ]);
+
+        Rating::create([
+            'user_id' => $admin->id,
+            'recipe_id' => $musaka->id,
+            'value' => 4,
+            'review' => 'Класика! Получи се чудесно, но следващия път ще сложа по-малко олио.',
+        ]);
+
+        Rating::create([
+            'user_id' => $user->id,
+            'recipe_id' => $musaka->id,
+            'value' => 4.5,
+            'review' => 'Страхотна рецепта, много близко до оригинала.',
+        ]);
+
+        Rating::create([
+            'user_id' => $admin->id,
+            'recipe_id' => $banica->id,
+            'value' => 5,
+            'review' => 'Стана перфектна, точно като на баба.',
+        ]);
+
+        Rating::create([
+            'user_id' => $user->id,
+            'recipe_id' => $banica->id,
+            'value' => 3.5,
+            'review' => 'Добра, но корите ми се получиха малко сухи.',
+        ]);
+
+        Rating::create([
+            'user_id' => $user->id,
+            'recipe_id' => $shopska->id,
+            'value' => 5,
+            'review' => 'Най-добрата салата за лятото!',
+        ]);
+
+        Rating::create([
+            'user_id' => $admin->id,
+            'recipe_id' => $shopska->id,
+            'value' => 4.5,
+            'review' => 'Свежа и вкусна, перфектна за жегите.',
+        ]);
+
+        Rating::create([
+            'user_id' => $admin->id,
+            'recipe_id' => $tarator->id,
+            'value' => 5,
+            'review' => 'Освежаващо и много вкусно. Добавих малко орехи.',
+        ]);
+
+        Rating::create([
+            'user_id' => $user->id,
+            'recipe_id' => $tarator->id,
+            'value' => 4.5,
+            'review' => 'Обичам го студен, направо от хладилника!',
+        ]);
+
+        Rating::create([
+            'user_id' => $admin->id,
+            'recipe_id' => $palachinki->id,
+            'value' => 4.5,
+            'review' => 'Тънки и вкусни, децата ги ядоха за секунди.',
+        ]);
+
+        Rating::create([
+            'user_id' => $user->id,
+            'recipe_id' => $chushki->id,
+            'value' => 4,
+            'review' => 'Много хубави, но трябва повече ориз в плънката.',
         ]);
     }
 }

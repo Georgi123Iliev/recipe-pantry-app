@@ -89,7 +89,7 @@ class RecipeController extends Controller
         $paginatedRatings = $recipe->ratings()
             ->with('user')
             ->latest()
-            ->paginate(3)
+            ->paginate(2)
             ->withQueryString();
 
         return Inertia::render('Recipes/Show', [

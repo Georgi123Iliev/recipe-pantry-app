@@ -10,7 +10,11 @@ class RatingController extends Controller
     public function store(Request $request, Recipe $recipe)
     {
         $validated = $request->validate([
-            'value'  => 'required|integer|between:1,5',
+            'value'  => ['required', 'numeric', 'between:0.5,5', function ($attribute, $value, $fail) {
+                if (fmod($value * 2, 1) !== 0.0) {
+                    $fail('Оценката трябва да бъде кратна на 0.5.');
+                }
+            }],
             'review' => 'nullable|string|max:1000',
         ]);
 
