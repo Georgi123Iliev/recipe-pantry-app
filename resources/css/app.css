@@ -5,6 +5,7 @@
 @tailwind utilities;
 
 @layer components {
+
     /* Cozy Gingham Tablecloth Pattern — applied to body wrapper */
     .gingham-bg {
         background-color: #F7ECD0;
@@ -29,13 +30,127 @@
         padding: 3rem 4rem 4rem 5rem;
         box-shadow: -5px 5px 15px rgba(78, 52, 46, 0.15);
         position: relative;
-        background-image: repeating-linear-gradient(
-            transparent,
-            transparent 31px,
-            #e1daca 31px,
-            #e1daca 32px
-        );
+        background-image: repeating-linear-gradient(transparent,
+                transparent 31px,
+                #e1daca 31px,
+                #e1daca 32px);
         line-height: 32px;
+    }
+
+    /* Gloss/frost effect behind text on notebook pages for readability */
+    .notebook-gloss {
+        background-color: rgba(255, 253, 248, 0.88);
+        box-decoration-break: clone;
+        -webkit-box-decoration-break: clone;
+        padding: 2px 6px;
+        border-radius: 2px;
+    }
+
+    /* Sticky Note section wrapper */
+    .notebook-section {
+        background-color: #FFF7D6; /* Cozy pale yellow sticky note */
+        padding: 1.5rem 2rem;
+        border-radius: 2px 8px 2px 20px / 8px 2px 20px 2px; /* Slight paper curl */
+        border: 2px solid rgba(185, 160, 125, 0.6); /* Stronger, more visible border */
+        box-shadow: 4px 6px 14px rgba(78, 52, 46, 0.15); /* Stronger shadow to pop off the page */
+        position: relative;
+        z-index: 10;
+        margin: 2.5rem 0;
+    }
+
+    /* Washi tape strip on top center of the sticky note */
+    .notebook-section::after {
+        content: '';
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%) rotate(-1.5deg);
+        width: 80px;
+        height: 25px;
+        background-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        backdrop-filter: blur(2px);
+        border-radius: 1px;
+    }
+
+    /* Remove margin from first elements inside the wrapper for better spacing */
+    .notebook-section> :first-child {
+        margin-top: 0 !important;
+    }
+
+    /* Auto-apply gloss to other key content elements outside notebook-section (fallback) */
+    .notebook-page>h1,
+    .notebook-page>form,
+    .notebook-page>table,
+    .notebook-page .form-container,
+    .notebook-page .recipe-grid,
+    .notebook-page .add-form,
+    .notebook-page .pantry-category,
+    .notebook-page .suggestion-grid,
+    .notebook-page .overflow-x-auto {
+        background-color: rgba(255, 253, 248, 0.88);
+        padding-left: 8px;
+        padding-right: 8px;
+        border-radius: 3px;
+    }
+
+    /* Section headings inside or outside */
+    .notebook-page h1[class*="bg-paper-white"],
+    .notebook-page h2[class*="bg-paper-white"] {
+        background-color: transparent;
+        padding: 4px 10px;
+        border-radius: 3px;
+        text-decoration: underline;
+        text-decoration-color: rgba(194, 70, 65, 0.3);
+        text-decoration-style: wavy;
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 5px;
+        display: inline-block;
+    }
+
+    /* Table readability inside notebook pages */
+    .notebook-page table {
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: rgba(255, 253, 248, 0.92);
+        border-radius: 4px;
+    }
+
+    .notebook-page table th {
+        background-color: rgba(255, 253, 248, 0.98);
+    }
+
+    .notebook-page table td {
+        background-color: rgba(255, 253, 248, 0.92);
+    }
+
+    /* Ingredient list items - no individual gloss if inside section */
+    .notebook-page .ingredient-list li {
+        padding-left: 6px;
+        padding-right: 6px;
+    }
+
+    /* Pantry items */
+    .notebook-page .pantry-item {
+        background-color: rgba(255, 253, 248, 0.95);
+    }
+
+    /* Recipe rows on index page */
+    .notebook-page .recipe-row {
+        background-color: rgba(255, 253, 248, 0.85);
+        padding-left: 8px;
+        padding-right: 8px;
+        border-radius: 2px;
+    }
+
+    /* Search input */
+    .notebook-page .search-input {
+        background-color: rgba(255, 253, 248, 0.95);
+    }
+
+    /* Suggestion cards */
+    .notebook-page .suggestion-card {
+        background-color: rgba(255, 253, 248, 0.96);
     }
 
     /* Red margin line on left side of notebook page */

@@ -60,21 +60,22 @@ const prevImage = () => {
                 </div>
             </div>
 
-            <!-- Meta info -->
-            <div class="font-caveat text-text-muted mt-2" style="font-size: 1.3rem;">
-                <span v-if="r.prep_time">Подготовка: {{ r.prep_time }} мин</span>
-                <span v-if="r.prep_time && r.cook_time"> · </span>
-                <span v-if="r.cook_time">Готвене: {{ r.cook_time }} мин</span>
-                <span v-if="r.servings"> · {{ r.servings }} порции</span>
-            </div>
-            <p class="text-sm text-text-muted font-montserrat mt-1">
-                от {{ r.user?.name }}
-            </p>
+            <!-- Meta info & Description -->
+            <div class="notebook-section mt-4">
+                <div class="font-caveat text-text-muted mt-2" style="font-size: 1.3rem;">
+                    <span v-if="r.prep_time">Подготовка: {{ r.prep_time }} мин</span>
+                    <span v-if="r.prep_time && r.cook_time"> · </span>
+                    <span v-if="r.cook_time">Готвене: {{ r.cook_time }} мин</span>
+                    <span v-if="r.servings"> · {{ r.servings }} порции</span>
+                </div>
+                <p class="text-sm text-text-muted font-montserrat mt-1">
+                    от {{ r.user?.name }}
+                </p>
 
-            <!-- Description -->
-            <p v-if="r.description" class="mt-4 font-lora" style="font-size: 1.1rem; text-align: justify;">
-                {{ r.description }}
-            </p>
+                <p v-if="r.description" class="mt-4 font-lora" style="font-size: 1.1rem; text-align: justify;">
+                    {{ r.description }}
+                </p>
+            </div>
 
             <!-- Images -->
             <div v-if="r.images && r.images.length > 0" class="mt-6">
@@ -102,22 +103,26 @@ const prevImage = () => {
             </div>
 
             <!-- Ingredients -->
-            <h2 class="font-lora mt-8 bg-paper-white inline-block" style="font-style: italic;">
-                Съставки:
-            </h2>
-            <ul class="ingredient-list">
-                <li v-for="ingredient in r.ingredients" :key="ingredient.id" class="font-lora">
-                    <span class="font-semibold">{{ ingredient.name }}</span>
-                    — {{ ingredient.display_quantity }} {{ ingredient.display_unit }}
-                </li>
-            </ul>
+            <div class="notebook-section mt-6">
+                <h2 class="font-lora bg-paper-white inline-block" style="font-style: italic; margin-top: 0;">
+                    Съставки:
+                </h2>
+                <ul class="ingredient-list">
+                    <li v-for="ingredient in r.ingredients" :key="ingredient.id" class="font-lora">
+                        <span class="font-semibold">{{ ingredient.name }}</span>
+                        — {{ ingredient.display_quantity }} {{ ingredient.display_unit }}
+                    </li>
+                </ul>
+            </div>
 
             <!-- Instructions -->
-            <h2 class="font-lora mt-8 bg-paper-white inline-block" style="font-style: italic;">
-                Начин на приготвяне:
-            </h2>
-            <div class="font-lora mt-2 instructions-text" style="white-space: pre-line; text-align: justify;">
-                {{ r.instructions }}
+            <div class="notebook-section mt-6">
+                <h2 class="font-lora bg-paper-white inline-block" style="font-style: italic; margin-top: 0;">
+                    Начин на приготвяне:
+                </h2>
+                <div class="font-lora mt-2 instructions-text" style="white-space: pre-line; text-align: justify;">
+                    {{ r.instructions }}
+                </div>
             </div>
 
             <!-- Back link -->

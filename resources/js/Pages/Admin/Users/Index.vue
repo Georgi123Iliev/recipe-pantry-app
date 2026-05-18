@@ -45,7 +45,7 @@ const deleteUser = (user) => {
                 {{ errors.error }}
             </div>
 
-            <div class="overflow-x-auto">
+            <div class="notebook-section overflow-x-auto mt-6">
                 <table class="w-full text-left border-collapse font-montserrat text-sm">
                     <thead>
                         <tr class="border-b-2 border-text-muted/30">
