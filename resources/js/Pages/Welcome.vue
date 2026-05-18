@@ -115,6 +115,7 @@ const totalTime = (recipe) => (recipe.prep_time || 0) + (recipe.cook_time || 0);
                             <span v-if="totalTime(recipe)" class="font-caveat text-cherry-red text-xl">{{ totalTime(recipe) }} мин</span>
                             <span v-else class="font-caveat text-text-muted text-xl">—</span>
                             <span class="font-semibold">{{ recipe.title }}</span>
+                            <span v-if="recipe.ratings_count" class="rating-badge">★ {{ recipe.ratings_avg }}</span>
                         </Link>
                     </div>
                     <p v-else class="font-caveat text-text-muted text-lg text-center py-4">
@@ -143,9 +144,28 @@ const totalTime = (recipe) => (recipe.prep_time || 0) + (recipe.cook_time || 0);
 <style scoped>
 .recipe-row {
     @apply flex items-center gap-4 py-2 border-b border-[#e1daca] hover:bg-bg-beige/30 cursor-pointer no-underline text-text-dark transition-colors duration-200;
+    flex-wrap: nowrap;
 }
 
 .recipe-row:hover span.font-semibold {
     color: #C24641;
+}
+
+.recipe-row span.font-semibold {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rating-badge {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    color: #DAA520;
+    margin-left: auto;
+    padding-left: 0.5rem;
 }
 </style>

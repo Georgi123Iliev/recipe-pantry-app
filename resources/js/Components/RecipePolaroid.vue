@@ -31,6 +31,13 @@ const totalTime = (props.recipe.prep_time || 0) + (props.recipe.cook_time || 0);
                 >
                     · {{ totalTime }} мин
                 </span>
+                <span
+                    v-if="recipe.ratings_count"
+                    class="text-base ml-1"
+                    style="color: #DAA520;"
+                >
+                    · ★ {{ recipe.ratings_avg }}
+                </span>
             </div>
         </div>
     </Link>

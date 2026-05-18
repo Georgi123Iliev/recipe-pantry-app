@@ -40,6 +40,20 @@ class RecipeResource extends JsonResource
                     'url' => Storage::url($image->path),
                 ]);
             }),
+            'ratings_avg'   => round($this->ratings_avg_value ?? 0, 1),
+            'ratings_count' => (int) ($this->ratings_count ?? 0),
+            'ratings'       => $this->whenLoaded('ratings', function () {
+                return $this->ratings->map(fn ($rating) => [
+                    'id'         => $rating->id,
+                    'value'      => $rating->value,
+                    'review'     => $rating->review,
+                    'created_at' => $rating->created_at,
+                    'user'       => [
+                        'id'   => $rating->user->id,
+                        'name' => $rating->user->name,
+                    ],
+                ]);
+            }),
         ];
     }
 }

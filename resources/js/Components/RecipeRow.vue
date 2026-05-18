@@ -22,5 +22,8 @@ const totalTime = (props.recipe.prep_time || 0) + (props.recipe.cook_time || 0);
         <span class="font-semibold text-text-dark font-lora">
             {{ recipe.title }}
         </span>
+        <span v-if="recipe.ratings_count" class="font-caveat" style="font-size: 1.2rem; color: #DAA520;">
+            ★ {{ recipe.ratings_avg }}
+        </span>
     </Link>
 </template>

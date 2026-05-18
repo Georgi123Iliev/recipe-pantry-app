@@ -17,7 +17,7 @@ const page = usePage();
         <nav class="paper-texture flex items-center justify-between p-4 px-8 mb-8 transition-shadow"
              :class="route().current('admin.*') ? 'shadow-md border-b-4 border-cherry-red' : ''">
             <!-- Logo -->
-            <Link :href="route('recipes.index')" class="block">
+            <Link href="/" class="block">
                 <h1 class="font-caveat text-cherry-red text-4xl m-0" style="transform: rotate(-2deg);">
                     Рецептите на Мама
                 </h1>

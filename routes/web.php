@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PantryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Resources\RecipeResource;
 use App\Models\Recipe;
@@ -11,6 +12,8 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     $latestRecipes = Recipe::with(['ingredients', 'images', 'user'])
+        ->withCount('ratings')
+        ->withAvg('ratings', 'value')
         ->latest()
         ->take(5)
         ->get();
@@ -34,6 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('recipes', RecipeController::class)->except(['index', 'show']);
+    Route::post('/recipes/{recipe}/rate', [RatingController::class, 'store'])->name('recipes.rate');
 
     Route::get('/pantry', [PantryController::class, 'index'])->name('pantry.index');
     Route::post('/pantry', [PantryController::class, 'store'])->name('pantry.store');
