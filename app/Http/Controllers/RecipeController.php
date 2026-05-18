@@ -21,22 +21,38 @@ class RecipeController extends Controller
     ) {}
 
     public function index()
-    {
-        $query = Recipe::with(['ingredients', 'images', 'user']);
+{
+    $query = Recipe::with(['ingredients', 'images', 'user']);
 
-        if (request()->filled('search')) {
-            $searchTerm = '%' . request()->search . '%';
-            $query->where('title', 'like', $searchTerm)
-                ->orWhereHas('ingredients', fn ($q) => $q->where('name', 'like', $searchTerm));
-        }
 
-        $recipes = $query->latest()->paginate(8)->withQueryString();
+    //Мързеше ме да рекомпилирам sqliite, за да може кирилицата, затова ниписах това
+    if (request()->filled('search')) {
+        $search = request()->search;
+        
+        $exact = '%' . $search . '%';
+        $lower = '%' . mb_strtolower($search, 'UTF-8') . '%';
+        $upper = '%' . mb_strtoupper($search, 'UTF-8') . '%';
+        $title = '%' . mb_convert_case($search, MB_CASE_TITLE, 'UTF-8') . '%';
 
-        return Inertia::render('Recipes/Index', [
-            'recipes' => RecipeResource::collection($recipes),
-            'filters' => request()->only('search'),
-        ]);
+        $query->where('title', 'like', $exact)
+            ->orWhere('title', 'like', $lower)
+            ->orWhere('title', 'like', $upper)
+            ->orWhere('title', 'like', $title)
+            ->orWhereHas('ingredients', fn ($q) => 
+                $q->where('name', 'like', $exact)
+                  ->orWhere('name', 'like', $lower)
+                  ->orWhere('name', 'like', $upper)
+                  ->orWhere('name', 'like', $title)
+            );
     }
+
+    $recipes = $query->latest()->paginate(8)->withQueryString();
+
+    return Inertia::render('Recipes/Index', [
+        'recipes' => RecipeResource::collection($recipes),
+        'filters' => request()->only('search'),
+    ]);
+}
 
     public function create()
     {

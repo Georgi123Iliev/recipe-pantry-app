@@ -70,10 +70,10 @@ const performSearch = () => {
 
                 <!-- Pagination -->
                 <div
-                    v-if="recipes.links && recipes.links.length > 3"
+                    v-if="recipes.meta && recipes.meta.links && recipes.meta.links.length > 3"
                     class="flex items-center justify-center gap-2 mt-12 font-montserrat text-sm"
                 >
-                    <template v-for="link in recipes.links" :key="link.label">
+                    <template v-for="link in recipes.meta.links" :key="link.label">
                         <Link
                             v-if="link.url"
                             :href="link.url"
